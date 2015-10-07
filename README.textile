@@ -26,7 +26,7 @@ h2(#tags). Tags
 h3. <txp:oui_disclaimer />
 
 Displays a conditional warning message.
-Should be placed in your each page.
+Should be placed in your each page, or in a form, depending on how it is used.
 
 bc. <txp:oui_disclaimer />
 
@@ -66,7 +66,7 @@ bc. <txp:oui_disclaimer_accept />
 
 h2(#exemples). Exemples
 
-h3. Exemple 1: simple use 
+h3. Exemple 1: single tag use 
 
 bc. <txp:oui_disclaimer wraptag="div" class="cookies-warning" message="This website uses cookies" message_class="cookies-warning-message" alt_url="http://www.my-website.com/privacy-policy" alt="Read more"  alt_class="button" accept_class="button" />
 
@@ -78,7 +78,14 @@ bc.. <div class="cookies-warning">
 	<a href="?oui_disclaimer_accepted=1">Read more</a>
 </div>
 
-h3. Exemple 2: form use 
+h3. Exemple 2: container tag use 
+
+bc.. <txp:oui_disclaimer>
+	Your content
+	<txp:oui_disclaimer_accept />
+</txp:oui_disclaimer>
+
+h3. Exemple 3: Use a form 
 
 bc. <txp:oui_disclaimer form="cookies-warning" />
 
