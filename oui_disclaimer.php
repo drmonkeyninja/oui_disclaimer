@@ -4,7 +4,7 @@ $plugin['name'] = 'oui_disclaimer';
 
 $plugin['allow_html_help'] = 0;
 
-$plugin['version'] = '1.0.0';
+$plugin['version'] = '1.1.0';
 $plugin['author'] = 'Nicolas Morand';
 $plugin['author_uri'] = 'http://www.nicolasmorand.com';
 $plugin['description'] = 'PHP powered disclaimer with cookie setting';
@@ -68,7 +68,7 @@ h2(#tags). Tags
 h3. <txp:oui_disclaimer />
 
 Displays a conditional warning message.
-Should be placed in your each page.
+Should be placed in your each page, or in a form, depending on how it is used.
 
 bc. <txp:oui_disclaimer />
 
@@ -108,7 +108,7 @@ bc. <txp:oui_disclaimer_accept />
 
 h2(#exemples). Exemples
 
-h3. Exemple 1: simple use 
+h3. Exemple 1: single tag use 
 
 bc. <txp:oui_disclaimer wraptag="div" class="cookies-warning" message="This website uses cookies" message_class="cookies-warning-message" alt_url="http://www.my-website.com/privacy-policy" alt="Read more"  alt_class="button" accept_class="button" />
 
@@ -120,7 +120,14 @@ bc.. <div class="cookies-warning">
 	<a href="?oui_disclaimer_accepted=1">Read more</a>
 </div>
 
-h3. Exemple 2: form use 
+h3. Exemple 2: container tag use 
+
+bc.. <txp:oui_disclaimer>
+	Your content
+	<txp:oui_disclaimer_accept />
+</txp:oui_disclaimer>
+
+h3. Exemple 3: Use a form 
 
 bc. <txp:oui_disclaimer form="cookies-warning" />
 
@@ -140,8 +147,8 @@ This plugin is distributed under "GPLv3":http://www.gnu.org/licenses/gpl-3.0.fr.
 
 # --- BEGIN PLUGIN CODE ---
 
-function oui_disclaimer($atts) {
-	global $oui_disclaimer_cookie, $oui_disclaimer_form;
+function oui_disclaimer($atts, $thing=null) {
+	global $oui_disclaimer_cookie, $oui_disclaimer_form, $oui_disclaimer_content;
 
 	extract(lAtts(array(
 		'cookie'  => 'oui_disclaimer_hidden',
@@ -162,8 +169,9 @@ function oui_disclaimer($atts) {
 		'alt_class' => 'oui_disclaimer_alt',
 	),$atts));
 
-		$oui_disclaimer_cookie = $cookie;
-		$oui_disclaimer_form = $form;
+	$oui_disclaimer_cookie = $cookie;
+	$oui_disclaimer_form = $form;
+	$oui_disclaimer_content = $thing;
 
 	// HTTP GET or POST request contains 'oui_accept_disclaimer_warning'?
 	if (gps($cookie))
@@ -182,33 +190,44 @@ function oui_disclaimer($atts) {
 	else
 	{
 
-		if ($form!==null) 
-		{		
-			return output_form(array("form"=>$form));			
-		}
-		// Displays warning
-		else if ($message!==null)
+		if ($thing===null)
 		{
-			return 
-			'<'.$wraptag.' class="'.$class.'">'.n.
-				($label ? '<'.$label_tag.' class="'.$label_class.'">'.$label.'</'.$label_tag.'>' : '').n.
-				'<'.$message_tag.' class="'.$message_class.'">'.$message.'.</'.$message_tag.'>'.n.	
-				($alt_url ? '<a rel="internal" class="'.$alt_class.'" href="'.$alt_url.'">'.$alt.'</a>' : '').n.
-				'<a rel="internal" class="'.$accept_class.'" href="?'.$cookie.'=1">'.$accept.'</a>'.n.
-			'</'.$wraptag.'>'.n;
+				
+			if ($form!==null) 
+			{		
+				return output_form(array("form"=>$form));			
+			}
+	
+			else if ($message!==null)
+			{
+				return 
+				'<'.$wraptag.' class="'.$class.'">'.n.
+					($label ? '<'.$label_tag.' class="'.$label_class.'">'.$label.'</'.$label_tag.'>' : '').n.
+					'<'.$message_tag.' class="'.$message_class.'">'.$message.'.</'.$message_tag.'>'.n.	
+					($alt_url ? '<a rel="internal" class="'.$alt_class.'" href="'.$alt_url.'">'.$alt.'</a>' : '').n.
+					'<a rel="internal" class="'.$accept_class.'" href="?'.$cookie.'=1">'.$accept.'</a>'.n.
+				'</'.$wraptag.'>'.n;
+			}
+	
+			else	
+			{
+				trigger_error("oui_disclaimer requires a message or a form attribute when used as a single tag");
+				return;
+			}
+
 		}
 
 		else 
 		{
-			trigger_error("oui_disclaimer requires a message or a form attribute");
-			return;
+			return $thing;
 		}
+		
 	}
 			
 }
 
 function oui_disclaimer_accept($atts) {
-	global $oui_disclaimer_cookie, $oui_disclaimer_form;
+	global $oui_disclaimer_cookie, $oui_disclaimer_form, $oui_disclaimer_content;
 
 	extract(lAtts(array(
 		'wraptag' => '',
@@ -217,16 +236,17 @@ function oui_disclaimer_accept($atts) {
 		'link_class'  => 'oui_disclaimer_accept_link',
 	),$atts));
 
-	if ($oui_disclaimer_form!==null) 
+	if (($oui_disclaimer_content===null && $oui_disclaimer_form===null) || $oui_disclaimer_content!==null) 
 	{
 		return 
 		($wraptag ? '<'.$wraptag.' class="'.$class.'">' : '').n.
 			'<a rel="internal" class="'.$link_class.'" href="?'.$oui_disclaimer_cookie.'=1">'.$link.'</a>'.n.
 		($wraptag ? '</'.$wraptag.'>' : '').n;	
 	}
+	
 	else 
 	{
-		trigger_error("oui_disclaimer_accept requires a oui_disclaimer form attribute");
+		trigger_error("oui_disclaimer_accept must be used in a oui_disclaimer container tag or in a form assigned via the oui_disclaimer form attribute");
 		return;
 	}
 		
