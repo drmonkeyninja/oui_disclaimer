@@ -1,0 +1,93 @@
+h1. oui_disclaimer
+
+Easily display a warning message which can be hidden for a defined duration once accepted.
+
+h2. Table of contents
+
+* "Plugin requirements":#requirements
+* "Installation":#installation
+* "Tags":#tags
+* "Exemples":#exemples
+* "Author":#author
+* "Licence":#licence
+
+h2(#requirements). Plugin requirements
+
+oui_disclaimer’s minimum requirements:
+
+* Textpattern 4.5+
+
+h2(#installation). Installation
+
+Paste the content of the plugin file under the *Admin > Plugins*, upload it and install.
+
+h2(#tags). Tags
+
+h3. <txp:oui_disclaimer />
+
+Displays a conditional warning message.
+Should be placed in your each page.
+
+bc. <txp:oui_disclaimer />
+
+h3(#attributes). Attributes
+
+If used as a single tag, @<txp:oui_disclaimer />@ should contains at least a @message@ or a @form@ attribute; @form@ overrides @message@. 
+
+* @cookie=""@ - _Default: oui_disclaimer_accepted_ - Name of the cookie set to hide the disclaimer for a defined duration.
+* @expires="…"@ - _Default: +1 week_ - The duration assigned to the cookie ("strtotime":http://php.net/manual/fr/function.strtotime.php valid value). 
+
+* @form=""@ - _Default: unset_ - The form used for the disclaimer content.
+
+* @wraptag="…"@ - _Default: div_ - The HTML tag used around the generated content.
+* @class="…"@ – _Default: oui_disclaimer_ - The css class to apply to the HTML tag assigned to @wraptag@. 
+
+* @label="…"@ – _Default: unset_ - The label used to entitled the generated content.
+* @label_tag="…"@ - _Default: h1_ - The HTML tag used around the value assigned to @label@.
+* @label_class="…"@ – _Default: oui_disclaimer_label_ - The css class to apply to the HTML tag assigned to @label_tag@. 
+
+* @message="…"@ – _Default: unset_ - The main message you want to display.
+* @message_tag="…"@ - _Default: span_ - The HTML tag used around the value assigned to @message@.
+* @message_class="…"@ – _Default: oui_disclaimer_message_ - The css class to apply to the HTML tag assigned to @message_tag@.
+
+* @alt_url="…"@ – _Default: unset_ - An alternative url to the @accept@ link used by the @alt@ link. 
+* @alt="…"@ – _Default: Read more_ - The text value to assigned to the @alt@ link.
+* @alt_class="…"@ – _Default: oui_disclaimer_alt_ - The css class to apply to the HTML link tag @a@.
+
+* @accept="…"@ - _Default: accept and continue_ - The text value to assigned to the @accept@ link.
+* @accept_class="…"@ – _Default: oui_disclaimer_accept_ - The css class to apply to the HTML link tag @a@.
+
+h3. <txp:oui_disclaimer_accept />
+
+Displays a link to accept/hide the disclaimer message.
+Should be used only in the form used as the @form@ attribute of @<txp:oui_disclaimer />@.
+
+bc. <txp:oui_disclaimer_accept />
+
+h2(#exemples). Exemples
+
+h3. Exemple 1: simple use 
+
+bc. <txp:oui_disclaimer wraptag="div" class="cookies-warning" message="This website uses cookies" message_class="cookies-warning-message" alt_url="http://www.my-website.com/privacy-policy" alt="Read more"  alt_class="button" accept_class="button" />
+
+Placed in your page(s), the code above will return the following HTML code if the _oui_disclaimer_accepted_ cookie is not already set or is expired.
+
+bc.. <div class="cookies-warning">
+	<span class="">This website uses cookies</span>
+	<a href="http://www.my-website.com/privacy-policy">Read more</a>
+	<a href="?oui_disclaimer_accepted=1">Read more</a>
+</div>
+
+h3. Exemple 2: form use 
+
+bc. <txp:oui_disclaimer form="cookies-warning" />
+
+Placed in your page(s), the code above will return the content of the form named _disclaimer_. This form must contains a @<txp:oui_disclaimer_accept />@ tag.
+
+h2(#author). Author
+
+"Nicolas Morand":http://www.nicolasmorand.com, from a "Jukka Svahn":http://rahforum.biz/ "tip":http://textpattern.tips/setting-cookies-for-eu-legislation.
+
+h2(#licence). Licence
+
+This plugin is distributed under "GPLv3":http://www.gnu.org/licenses/gpl-3.0.fr.html.
