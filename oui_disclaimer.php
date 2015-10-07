@@ -4,7 +4,7 @@ $plugin['name'] = 'oui_disclaimer';
 
 $plugin['allow_html_help'] = 0;
 
-$plugin['version'] = '1.1.0';
+$plugin['version'] = '1.1.1';
 $plugin['author'] = 'Nicolas Morand';
 $plugin['author_uri'] = 'http://www.nicolasmorand.com';
 $plugin['description'] = 'PHP powered disclaimer with cookie setting';
@@ -204,8 +204,8 @@ function oui_disclaimer($atts, $thing=null) {
 				'<'.$wraptag.' class="'.$class.'">'.n.
 					($label ? '<'.$label_tag.' class="'.$label_class.'">'.$label.'</'.$label_tag.'>' : '').n.
 					'<'.$message_tag.' class="'.$message_class.'">'.$message.'.</'.$message_tag.'>'.n.	
-					($alt_url ? '<a rel="internal" class="'.$alt_class.'" href="'.$alt_url.'">'.$alt.'</a>' : '').n.
-					'<a rel="internal" class="'.$accept_class.'" href="?'.$cookie.'=1">'.$accept.'</a>'.n.
+					($alt_url ? href($alt, $alt_url, ' class="'.$alt_class.'"') : '').n.
+					href($accept, '?'.$cookie.'=1', ' class="'.$accept_class.'"').n.
 				'</'.$wraptag.'>'.n;
 			}
 	
@@ -240,8 +240,8 @@ function oui_disclaimer_accept($atts) {
 	{
 		return 
 		($wraptag ? '<'.$wraptag.' class="'.$class.'">' : '').n.
-			'<a rel="internal" class="'.$link_class.'" href="?'.$oui_disclaimer_cookie.'=1">'.$link.'</a>'.n.
-		($wraptag ? '</'.$wraptag.'>' : '').n;	
+			href($link, '?'.$oui_disclaimer_cookie.'=1', ' class="'.$link_class.'"').n.
+		($wraptag ? '</'.$wraptag.'>' : '').n;
 	}
 	
 	else 
