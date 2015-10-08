@@ -1,6 +1,6 @@
 h1. oui_disclaimer
 
-Easily display a warning message which can be hidden for a defined duration once accepted.
+Easily display a warning message which can be hidden or replaced for a defined duration once accepted.
 
 h2. Table of contents
 
@@ -8,6 +8,7 @@ h2. Table of contents
 * "Installation":#installation
 * "Tags":#tags
 * "Exemples":#exemples
+* "Styles":#styles
 * "Author":#author
 * "Licence":#licence
 
@@ -85,9 +86,9 @@ Placed in your page(s), the code above will return the following HTML code if th
 bc.. <div class="oui_disclaimer">
 	<h3 class="cookies-label">Disclaimer</h3>
 	<p class="cookies-warning">
-		<span class="">This website uses cookies</span>
-		<a href="http://www.my-website.com/privacy-policy">Read more</a>
-		<a href="?oui_disclaimer_accepted=1">Read more</a>
+		<span class="oui_disclaimer_message">This website uses cookies</span>
+		<a class="oui_disclaimer_decline" href="http://www.my-website.com/privacy-policy">Read more</a>
+		<a class="oui_disclaimer_accept" href="?oui_disclaimer_accepted=1">Accept and continue</a>
 	</p>
 </div>
 
@@ -100,6 +101,18 @@ bc.. <txp:oui_disclaimer>
 	Well, you are crazy…
 	<txp:oui_disclaimer_reset />
 </txp:oui_disclaimer>
+
+h2(#styles). Styles
+
+Defined classes:
+
+* @oui_diclaimer@ – Applied to a div wrapper.
+* @oui_disclaimer_label@ – Applied to the @labeltag@.
+* @oui_disclaimer_content@ – Applied to the @wraptag@ value by default; overrided by the @class@ attribute.
+* @oui_disclaimer_message@ – Applied to a span element.
+* @oui_disclaimer_accept@ – Applied to the link; overrided by the @class@ attribute of @<txp:oui_diclaimer_accept />@.
+* @oui_disclaimer_decline@ – Applied to the link when @<txp:oui_diclaimer />@ is used as a single tag.
+* @oui_disclaimer_reset@ – Applied to the link; overrided by the @class@ attribute of @<txp:oui_diclaimer_reset />@.
 
 h2(#author). Author
 
