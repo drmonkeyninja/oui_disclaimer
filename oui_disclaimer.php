@@ -4,7 +4,7 @@ $plugin['name'] = 'oui_disclaimer';
 
 $plugin['allow_html_help'] = 0;
 
-$plugin['version'] = '1.2.0';
+$plugin['version'] = '1.2.1';
 $plugin['author'] = 'Nicolas Morand';
 $plugin['author_uri'] = 'http://www.nicolasmorand.com';
 $plugin['description'] = 'PHP powered disclaimer with cookie setting';
@@ -105,14 +105,17 @@ h2(#exemples). Exemples
 
 h3. Exemple 1: single tag use 
 
-bc. <txp:oui_disclaimer wraptag="div" class="cookies-warning" message="This website uses cookies" message_class="cookies-warning-message" alt_url="http://www.my-website.com/privacy-policy" alt="Read more"  alt_class="button" accept_class="button" />
+bc. <txp:oui_disclaimer label="h3" labeltag="cookies-label" wraptag="p" class="cookies-warning" message="This website uses cookies" decline_url="http://www.my-website.com/privacy-policy" decline="Read more" />
 
 Placed in your page(s), the code above will return the following HTML code if the _oui_disclaimer_accepted_ cookie is not already set or is expired.
 
-bc.. <div class="cookies-warning">
-	<span class="">This website uses cookies</span>
-	<a href="http://www.my-website.com/privacy-policy">Read more</a>
-	<a href="?oui_disclaimer_accepted=1">Read more</a>
+bc.. <div class="oui_disclaimer">
+	<h3 class="cookies-label">Disclaimer</h3>
+	<p class="cookies-warning">
+		<span class="">This website uses cookies</span>
+		<a href="http://www.my-website.com/privacy-policy">Read more</a>
+		<a href="?oui_disclaimer_accepted=1">Read more</a>
+	</p>
 </div>
 
 h3. Exemple 2: container tag use 
