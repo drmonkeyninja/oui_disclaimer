@@ -4,7 +4,7 @@ $plugin['name'] = 'oui_disclaimer';
 
 $plugin['allow_html_help'] = 0;
 
-$plugin['version'] = '1.3.0';
+$plugin['version'] = '1.3.1';
 $plugin['author'] = 'Nicolas Morand';
 $plugin['author_uri'] = 'http://www.nicolasmorand.com';
 $plugin['description'] = 'PHP powered disclaimer with cookie setting';
@@ -42,7 +42,7 @@ if (0) {
 
 h1. oui_disclaimer
 
-Easily display a warning message which can be hidden for a defined duration once accepted.
+Easily display a warning message which can be hidden or replaced for a defined duration once accepted.
 
 h2. Table of contents
 
@@ -50,6 +50,7 @@ h2. Table of contents
 * "Installation":#installation
 * "Tags":#tags
 * "Exemples":#exemples
+* "Styles":#styles
 * "Author":#author
 * "Licence":#licence
 
@@ -127,9 +128,9 @@ Placed in your page(s), the code above will return the following HTML code if th
 bc.. <div class="oui_disclaimer">
 	<h3 class="cookies-label">Disclaimer</h3>
 	<p class="cookies-warning">
-		<span class="">This website uses cookies</span>
-		<a href="http://www.my-website.com/privacy-policy">Read more</a>
-		<a href="?oui_disclaimer_accepted=1">Read more</a>
+		<span class="oui_disclaimer_message">This website uses cookies</span>
+		<a class="oui_disclaimer_decline" href="http://www.my-website.com/privacy-policy">Read more</a>
+		<a class="oui_disclaimer_accept" href="?oui_disclaimer_accepted=1">Accept and continue</a>
 	</p>
 </div>
 
@@ -142,6 +143,18 @@ bc.. <txp:oui_disclaimer>
 	Well, you are crazy…
 	<txp:oui_disclaimer_reset />
 </txp:oui_disclaimer>
+
+h2(#styles). Styles
+
+Defined classes:
+
+* @oui_diclaimer@ – Applied to a div wrapper.
+* @oui_disclaimer_label@ – Applied to the @labeltag@.
+* @oui_disclaimer_content@ – Applied to the @wraptag@ value by default; overrided by the @class@ attribute.
+* @oui_disclaimer_message@ – Applied to a span element.
+* @oui_disclaimer_accept@ – Applied to the link; overrided by the @class@ attribute of @<txp:oui_diclaimer_accept />@.
+* @oui_disclaimer_decline@ – Applied to the link when @<txp:oui_diclaimer />@ is used as a single tag.
+* @oui_disclaimer_reset@ – Applied to the link; overrided by the @class@ attribute of @<txp:oui_diclaimer_reset />@.
 
 h2(#author). Author
 
@@ -271,15 +284,14 @@ function oui_disclaimer_accept($atts) {
 
 	extract(lAtts(array(
 		'url'  => '',
-		'wraptag' => '',
-		'class'  => '',
+		'class'  => 'oui_disclaimer_accept',
 		'link'  => gTxt('oui_disclaimer_accept'),
 	),$atts));
 
 	if ($oui_disclaimer_container!==null)
 	{
-		$out =  href($link, ($url ? $url : '').'?'.$oui_disclaimer_cookie.'=1', ' class="oui_disclaimer_accept"');
-		return ($wraptag ? doWrap($out, $wraptag, $class) : $out);
+		$out =  href($link, ($url ? $url : '').'?'.$oui_disclaimer_cookie.'=1', ' class="'.$class.'"');
+		return $out;
 	}
 
 	else
@@ -295,15 +307,14 @@ function oui_disclaimer_reset($atts) {
 
 	extract(lAtts(array(
 		'url'  => '',
-		'wraptag' => '',
-		'class'  => '',
+		'class'  => 'oui_disclaimer_reset',
 		'link'  => gTxt('oui_disclaimer_reset'),
 	),$atts));
 
 	if ($oui_disclaimer_container!==null)
 	{
-		$out =  href($link, ($url ? $url : '').'?oui_disclaimer_reset=1', ' class="oui_disclaimer_reset"');
-		return ($wraptag ? doWrap($out, $wraptag, $class) : $out);
+		$out =  href($link, ($url ? $url : '').'?oui_disclaimer_reset=1', ' class="'.$class.'"');
+		return $out;
 	}
 
 	else
