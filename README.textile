@@ -32,35 +32,30 @@ bc. <txp:oui_disclaimer />
 
 h3(#attributes). Attributes
 
-If used as a single tag, @<txp:oui_disclaimer />@ should contains at least a @message@ or a @form@ attribute; @form@ overrides @message@. 
+If used as a single tag, @<txp:oui_disclaimer />@ should contains at least a @message@ attribute. 
 
 * @cookie=""@ - _Default: oui_disclaimer_accepted_ - Name of the cookie set to hide the disclaimer for a defined duration.
 * @expires="…"@ - _Default: +1 week_ - The duration assigned to the cookie ("strtotime":http://php.net/manual/fr/function.strtotime.php valid value). 
-
-* @form=""@ - _Default: unset_ - The form used for the disclaimer content.
 
 * @wraptag="…"@ - _Default: div_ - The HTML tag used around the generated content.
 * @class="…"@ – _Default: oui_disclaimer_ - The css class to apply to the HTML tag assigned to @wraptag@. 
 
 * @label="…"@ – _Default: unset_ - The label used to entitled the generated content.
-* @label_tag="…"@ - _Default: h1_ - The HTML tag used around the value assigned to @label@.
-* @label_class="…"@ – _Default: oui_disclaimer_label_ - The css class to apply to the HTML tag assigned to @label_tag@. 
+* @labeltag="…"@ - _Default: h1_ - The HTML tag used around the value assigned to @label@.
 
-* @message="…"@ – _Default: unset_ - The main message you want to display.
-* @message_tag="…"@ - _Default: span_ - The HTML tag used around the value assigned to @message@.
-* @message_class="…"@ – _Default: oui_disclaimer_message_ - The css class to apply to the HTML tag assigned to @message_tag@.
+* @message="…"@ – _Default: unset_ - The main message to display.
+* @alt="…"@ – _Default: unset_ - The alternative message to display when the disclaimer is accepted.
 
-* @alt_url="…"@ – _Default: unset_ - An alternative url to the @accept@ link used by the @alt@ link. 
-* @alt="…"@ – _Default: Read more_ - The text value to assigned to the @alt@ link.
-* @alt_class="…"@ – _Default: oui_disclaimer_alt_ - The css class to apply to the HTML link tag @a@.
-
+* @accept_url="…"@ - _Default: unset (current page)_ - An url to redirect the user once the discliamer accepted.
 * @accept="…"@ - _Default: accept and continue_ - The text value to assigned to the @accept@ link.
-* @accept_class="…"@ – _Default: oui_disclaimer_accept_ - The css class to apply to the HTML link tag @a@.
+
+* @decline_url="…"@ – _Default: unset_ - An alternative url to the @accept@ link used by the @alt@ link. 
+* @decline="…"@ – _Default: Read more_ - The text value to assigned to the @alt@ link if a @decline_url@ is provided.
 
 h3. <txp:oui_disclaimer_accept />
 
 Displays a link to accept/hide the disclaimer message.
-Should be used only in the form used as the @form@ attribute of @<txp:oui_disclaimer />@.
+Should be used only in @<txp:oui_disclaimer></txp:oui_disclaimer>@.
 
 bc. <txp:oui_disclaimer_accept />
 
@@ -81,15 +76,11 @@ bc.. <div class="cookies-warning">
 h3. Exemple 2: container tag use 
 
 bc.. <txp:oui_disclaimer>
-	Your content
+	This content is crazy!
 	<txp:oui_disclaimer_accept />
+<txp:else />
+	Well, you are crazy…
 </txp:oui_disclaimer>
-
-h3. Exemple 3: Use a form 
-
-bc. <txp:oui_disclaimer form="cookies-warning" />
-
-Placed in your page(s), the code above will return the content of the form named _disclaimer_. This form must contains a @<txp:oui_disclaimer_accept />@ tag.
 
 h2(#author). Author
 
