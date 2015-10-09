@@ -4,7 +4,7 @@ $plugin['name'] = 'oui_disclaimer';
 
 $plugin['allow_html_help'] = 0;
 
-$plugin['version'] = '1.3.1';
+$plugin['version'] = '1.3.3';
 $plugin['author'] = 'Nicolas Morand';
 $plugin['author_uri'] = 'http://www.nicolasmorand.com';
 $plugin['description'] = 'PHP powered disclaimer with cookie setting';
