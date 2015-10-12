@@ -4,7 +4,7 @@ $plugin['name'] = 'oui_disclaimer';
 
 $plugin['allow_html_help'] = 0;
 
-$plugin['version'] = '1.3.6';
+$plugin['version'] = '1.4.0';
 $plugin['author'] = 'Nicolas Morand';
 $plugin['author_uri'] = 'http://www.nicolasmorand.com';
 $plugin['description'] = 'PHP powered disclaimer with cookie setting';
@@ -167,7 +167,7 @@ This plugin is distributed under "GPLv2":http://www.gnu.org/licenses/gpl-2.0.fr.
 
 # --- BEGIN PLUGIN CODE ---
 function oui_disclaimer($atts, $thing=null) {
-	global $oui_disclaimer_urlvar;
+	global $oui_disclaimer_urlvar, $oui_disclaimer_cookie, $oui_diclaimer_expires;
 
 	extract(lAtts(array(
 		'cookie'  => 'oui_disclaimer_hidden',
@@ -188,126 +188,59 @@ function oui_disclaimer($atts, $thing=null) {
 
 	$oui_disclaimer_urlvar = $cookie;
 	$oui_disclaimer_cookie = $cookie;
+	$oui_diclaimer_expires = $expires;
 
-	// Disclaimer content
+	$visible = oui_disclaimer_visible();
+
 	$content = '<span class="oui_diclaimer_message">'.$message.'</span>'.($decline_url ? href($decline, $decline_url, ' class="oui_disclaimer_decline"') : '').href($accept, ($accept_url ? $accept_url : '').'?'.$oui_disclaimer_urlvar.'=1', ' class="oui_disclaimer_accept"');
 
-	// Disclaimer	
-	$out = ($thing===null ? ($message ? '<div id="'.$cookie.'" class="oui_disclaimer">'.($label ? doLabel($label, $labeltag) : '').(($wraptag) ? doTag($content, $wraptag, $class) : $out).'</div>' : trigger_error("oui_disclaimer tag requires a message attribute when used as a single tag")) : '');
-
-	// Disclaimer alternative content
 	$alt_content = ($alt ? '<span class="oui_diclaimer_message">'.$alt.'</span>' :'').($reset ? href($reset, ($reset_url ? $reset_url : '').'?oui_disclaimer_reset=1', ' class="oui_disclaimer_reset"') : '');
 
-	// Alternative disclaimer	
-	$alt_out = ($alt_content ? '<div id="'.$cookie.'" class="oui_disclaimer">'.($label ? doLabel($label, $labeltag) : '').(($wraptag) ? doTag($alt_content, $wraptag, $class) : $out).'</div>' : '');
 
-	// HTTP request contains '$oui_disclaimer_urlvar'?
-	if (gps($oui_disclaimer_urlvar))
-	{
-		// Sets a cookie
-		setcookie($cookie, 1, strtotime(''.$expires.''), '/');
-
-		// Single tag
-		if ($thing===null)
-		{		
-
-			// Returns an alternative disclaimer if the 'alt' attribute is set.
-			if ($alt_out) return $alt_out;
-		
-		}
-
-		// Container tag
-		else
-		{
-			
-			// txp:else magic	
-			$result = ($cookie == 1) ? 1 : 0;
-			$out = parse(EvalElse($thing, $result));
-			return '<div id="'.$cookie.'" class="oui_disclaimer">'.($label ? doLabel($label, $labeltag) : '').(($wraptag) ? doTag($out, $wraptag, $class) : $out).'</div>';
-			
-		}
-
+	if ($thing===null) 
+	{	
+		$out = ($visible) ? '<div id="'.$cookie.'" class="oui_disclaimer">'.($label ? doLabel($label, $labeltag) : '').(($wraptag) ? doTag($content, $wraptag, $class) : $out).'</div>' : ($alt_content ? '<div id="'.$cookie.'" class="oui_disclaimer">'.($label ? doLabel($label, $labeltag) : '').(($wraptag) ? doTag($alt_content, $wraptag, $class) : $out).'</div>' : '');
+		return $out;		
 	}
 
-	// Otherwise, cookie already exists?
-	else if (cs($cookie))
-	{
-
-		// Single tag
-		if ($thing===null)
-		{	
-
-			if (gps('oui_disclaimer_reset'))
-			{	
-				// Deletes the cookie
-				setcookie($cookie, '', time() - 3600, '/');		
-
-				// Returns the disclaimer if the 'message' attribute is set, or return an error
-				return $out;
-
-			}
-
-			// alt message or reset link set in a single tag
-			else
-			{			
-				// Return the alternative disclaimer content
-				if ($alt_out) return $alt_out;
-			}			
-			
-		}
-
-		// Container tag
-		else
-		{
-
-			// Container tag and HTTP request contains oui_disclaimer_reset
-			if (gps('oui_disclaimer_reset'))
-			{	
-				// Delete the cookie
-				setcookie($cookie, '', time() - 3600, '/');
-
-				// txp:else magic	
-				$result = ($cookie == 1) ? 0 : 1;
-				$out = parse(EvalElse($thing, $result));
-				return '<div id="'.$cookie.'" class="oui_disclaimer">'.($label ? doLabel($label, $labeltag) : '').(($wraptag) ? doTag($out, $wraptag, $class) : $out).'</div>';		
-			}
-
-			// Container tag otherwise
-			else
-			{
-				// txp:else magic	
-				$result = ($cookie == 1) ? 1 : 0;
-				$out = parse(EvalElse($thing, $result));
-				return '<div id="'.$cookie.'" class="oui_disclaimer">'.($label ? doLabel($label, $labeltag) : '').(($wraptag) ? doTag($out, $wraptag, $class) : $out).'</div>';
-			}
-		}
-
-	}
-
-	// No '$oui_disclaimer_urlvar' in HTTP request and no cookie set
 	else
 	{
-
-		// Single tag
-		if ($thing===null)
-		{
-			// Return the alternative disclaimer content
-			return $out;
-		
-		}
-
-		// Container tag
-		else
-		{
-			// txp:else magic	
-			$result = ($cookie == $cookie) ? 1 : 0;
-			$out = parse(EvalElse($thing, $result));
-			return '<div id="'.$cookie.'" class="oui_disclaimer">'.($label ? doLabel($label, $labeltag) : '').(($wraptag) ? doTag($out, $wraptag, $class) : $out).'</div>';
-		}
-
+		$result = ($visible) ? 1 : 0;
+		$out = parse(EvalElse($thing, $result));
+		return ($out ? '<div id="'.$cookie.'" class="oui_disclaimer">'.($label ? doLabel($label, $labeltag) : '').(($wraptag) ? doTag($out, $wraptag, $class) : $out).'</div>' : '');
 	}
 
 }
+
+function oui_disclaimer_visible() {
+	global $oui_disclaimer_urlvar, $oui_disclaimer_cookie, $oui_diclaimer_expires;
+	
+	if (gps($oui_disclaimer_urlvar))
+	{
+		setcookie($oui_disclaimer_cookie, 1, strtotime(''.$oui_diclaimer_expires.''), '/');
+		$oui_disclaimer_visible = false;
+	}
+
+	else if (cs($oui_disclaimer_cookie))
+	{
+		if (gps('oui_disclaimer_reset'))
+		{
+			setcookie($oui_disclaimer_cookie, '', -1, '/');
+			$oui_disclaimer_visible = true;
+		}
+		else {
+			$oui_disclaimer_visible = false;
+		}			
+	}
+
+	else
+	{
+		$oui_disclaimer_visible = true;
+	}
+	
+	return $oui_disclaimer_visible;
+
+}	
 
 function oui_disclaimer_accept($atts) {
 	global $oui_disclaimer_urlvar;
@@ -318,7 +251,6 @@ function oui_disclaimer_accept($atts) {
 		'link'  => gTxt('oui_disclaimer_accept'),
 	),$atts));
 
-	// Return the link
 	$out =  href($link, ($url ? $url : '').'?'.$oui_disclaimer_urlvar.'=1', ' class="'.$class.'"');
 	return $out;
 
@@ -332,7 +264,6 @@ function oui_disclaimer_reset($atts) {
 		'link'  => gTxt('oui_disclaimer_reset'),
 	),$atts));
 
-	// Return the link
 	$out =  href($link, ($url ? $url : '').'?oui_disclaimer_reset=1', ' class="'.$class.'"');
 	return $out;
 
