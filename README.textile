@@ -67,7 +67,7 @@ h4. Attributes
 * @wraptag="…"@ - _Default: unset_ - The HTML tag used around the generated link.
 * @class="…"@ – _Default: unset_ - The css class to apply to the HTML tag assigned to @wraptag@.
 
-h3. txp:oui_disclaimer_reset
+h3. oui_disclaimer_reset
 
 Displays a link to delete the cookie set by the accept link and shows the disclaimer again.
 
