@@ -4,7 +4,7 @@ $plugin['name'] = 'oui_disclaimer';
 
 $plugin['allow_html_help'] = 0;
 
-$plugin['version'] = '1.4.0';
+$plugin['version'] = '1.4.1';
 $plugin['author'] = 'Nicolas Morand';
 $plugin['author_uri'] = 'http://www.nicolasmorand.com';
 $plugin['description'] = 'PHP powered disclaimer with cookie setting';
@@ -67,41 +67,41 @@ h4. Attributes
 
 If used as a single tag, @<txp:oui_disclaimer />@ should contains at least a @message@ attribute. 
 
-* @cookie=""@ - _Default: oui_disclaimer_accepted - Name of the cookie set to hide the disclaimer for a defined duration.
+* @cookie="…"@ - _Default: oui_disclaimer_accepted - Name of the cookie set to hide the disclaimer for a defined duration.
 * @expires="…"@ - _Default: +1 week_ - The duration assigned to the cookie ("strtotime":http://php.net/manual/fr/function.strtotime.php valid value). 
 
-* @wraptag="…"@ - _Default: div_ - The HTML tag used around the generated content.
-* @class="…"@ – _Default: oui_disclaimer_ - The css class to apply to the HTML tag assigned to @wraptag@. 
+* @wraptag="…"@ - _Default: p_ - The HTML tag used around the generated content.
+* @class="…"@ – _Default: oui_disclaimer_content_ - The css class to apply to the HTML tag assigned to @wraptag@. 
 
 * @label="…"@ – _Default: unset_ - The label used to entitled the generated content.
-* @labeltag="…"@ - _Default: h1_ - The HTML tag used around the value assigned to @label@.
+* @labeltag="…"@ - _Default: unset_ - The HTML tag used around the value assigned to @label@.
 
 * @message="…"@ – _Default: unset_ - The main message to display.
 * @alt="…"@ – _Default: unset_ - The alternative message to display when the disclaimer is accepted.
 
 * @accept_url="…"@ - _Default: unset (current page)_ - An url to redirect the user once the discliamer accepted.
-* @accept="…"@ - _Default: accept and continue_ - The text value to assigned to the @accept@ link.
+* @accept="…"@ - _Default: unset_ - The text value to assigned to the @accept@ link.
 
-* @decline_url="…"@ – _Default: unset_ - An alternative url to the @accept@ link used by the @alt@ link. 
-* @decline="…"@ – _Default: Read more_ - The text value to assigned to the @alt@ link if a @decline_url@ is provided.
+* @decline="…"@ – _Default: unset_ - The text value to assigned to the @decline@ link if a @decline_url@ is provided.
+* @decline_url="…"@ – _Default: unset_ - An alternative url to the @accept@ link url. 
 
+* @reset="…"@ - _Default: unset_ - The text value to assigned to the @reset@ link.
 * @reset_url="…"@ - _Default: unset (current page)_ - An url to redirect the user once the cookie deleted.
-* @reset="…"@ - _Default: accept and continue_ - The text value to assigned to the @reset@ link.
 
 h3. <txp:oui_disclaimer_accept />
 
-Displays a link to accept/hide the disclaimer message.
+Displays a link to hide/replace the disclaimer message.
 
 bc. <txp:oui_disclaimer_accept />
 
 h4. Attributes
 
 * @wraptag="…"@ - _Default: unset_ - The HTML tag used around the generated link.
-* @class="…"@ – _Default: unset__ - The css class to apply to the HTML tag assigned to @wraptag@.
+* @class="…"@ – _Default: unset_ - The css class to apply to the HTML tag assigned to @wraptag@.
 
 h3. <txp:oui_disclaimer_reset />
 
-Displays a link to delete the cookie set by the accept link.
+Displays a link to delete the cookie set by the accept link and shows the disclaimer again.
 
 bc. <txp:oui_disclaimer_accept />
 
@@ -114,7 +114,7 @@ h2(#exemples). Exemples
 
 h3. Exemple 1: single tag use 
 
-bc. <txp:oui_disclaimer label="h3" labeltag="cookies-label" wraptag="p" class="cookies-warning" message="This website uses cookies" decline_url="http://www.my-website.com/privacy-policy" decline="Read more" />
+bc. <txp:oui_disclaimer label="h3" labeltag="cookies-label" wraptag="p" class="cookies-warning" message="This website uses cookies" decline="Read more" decline_url="http://www.my-website.com/privacy-policy" accept="Accept and continue" />
 
 Placed in your page(s), the code above will return the following HTML code if the _oui_disclaimer_accepted_ cookie is not already set or is expired.
 
@@ -131,10 +131,10 @@ h3. Exemple 2: container tag use
 
 bc.. <txp:oui_disclaimer>
 	This content is crazy!
-	<txp:oui_disclaimer_accept />
+	<txp:oui_disclaimer_accept value="I'm crazy!" />
 <txp:else />
 	Well, you are crazy…
-	<txp:oui_disclaimer_reset />
+	<txp:oui_disclaimer_reset value="I'm not that crazy!" />
 </txp:oui_disclaimer>
 
 h2(#styles). Styles
@@ -196,7 +196,6 @@ function oui_disclaimer($atts, $thing=null) {
 
 	$alt_content = ($alt ? '<span class="oui_diclaimer_message">'.$alt.'</span>' :'').($reset ? href($reset, ($reset_url ? $reset_url : '').'?oui_disclaimer_reset=1', ' class="oui_disclaimer_reset"') : '');
 
-
 	if ($thing===null) 
 	{	
 		$out = ($visible) ? '<div id="'.$cookie.'" class="oui_disclaimer">'.($label ? doLabel($label, $labeltag) : '').(($wraptag) ? doTag($content, $wraptag, $class) : $out).'</div>' : ($alt_content ? '<div id="'.$cookie.'" class="oui_disclaimer">'.($label ? doLabel($label, $labeltag) : '').(($wraptag) ? doTag($alt_content, $wraptag, $class) : $out).'</div>' : '');
@@ -248,8 +247,13 @@ function oui_disclaimer_accept($atts) {
 	extract(lAtts(array(
 		'url'  => '',
 		'class'  => 'oui_disclaimer_accept',
-		'link'  => gTxt('oui_disclaimer_accept'),
+		'value'  => '',
 	),$atts));
+
+	if (!isset($atts['link'])) {
+		trigger_error("oui_disclaimer_accept requires a value attribute");
+		return;
+	}
 
 	$out =  href($link, ($url ? $url : '').'?'.$oui_disclaimer_urlvar.'=1', ' class="'.$class.'"');
 	return $out;
@@ -261,8 +265,13 @@ function oui_disclaimer_reset($atts) {
 	extract(lAtts(array(
 		'url'  => '',
 		'class'  => 'oui_disclaimer_reset',
-		'link'  => gTxt('oui_disclaimer_reset'),
+		'value'  => '',
 	),$atts));
+
+	if (!isset($atts['link'])) {
+		trigger_error("oui_disclaimer_reset requires a value attribute");
+		return;
+	}
 
 	$out =  href($link, ($url ? $url : '').'?oui_disclaimer_reset=1', ' class="'.$class.'"');
 	return $out;
