@@ -24,7 +24,11 @@ Paste the content of the plugin file under the *Admin > Plugins*, upload it and 
 
 h2(#tags). Tags
 
+<<<<<<< HEAD
 h3. txp:oui_disclaimer
+=======
+h3. oui_disclaimer
+>>>>>>> origin/master
 
 Displays a conditional warning message.
 Should be placed in your each page, or in a form, depending on how it is used.
@@ -56,7 +60,11 @@ If used as a single tag, @<txp:oui_disclaimer />@ should contains at least a @me
 * @reset="…"@ - _Default: unset_ - The value to assigned to the @reset@ link.
 * @reset_url="…"@ - _Default: unset (current page)_ - An url to redirect the user once the cookie deleted.
 
+<<<<<<< HEAD
 h3. txp:oui_disclaimer_accept
+=======
+h3. oui_disclaimer_accept
+>>>>>>> origin/master
 
 Displays a link to hide/replace the disclaimer message.
 
@@ -67,9 +75,13 @@ h4. Attributes
 * @wraptag="…"@ - _Default: unset_ - The HTML tag used around the generated link.
 * @class="…"@ – _Default: unset_ - The css class to apply to the HTML tag assigned to @wraptag@.
 
+<<<<<<< HEAD
 * @value="…"@ * - _Default: unset_ - The value to assigned to the @accept@ link.
 
 h3. txp:oui_disclaimer_reset
+=======
+h3. oui_disclaimer_reset
+>>>>>>> origin/master
 
 Displays a link to delete the cookie set by the accept link and shows the disclaimer again.
 
