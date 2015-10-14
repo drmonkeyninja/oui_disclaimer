@@ -4,7 +4,7 @@ $plugin['name'] = 'oui_disclaimer';
 
 $plugin['allow_html_help'] = 0;
 
-$plugin['version'] = '1.4.1';
+$plugin['version'] = '1.4.2';
 $plugin['author'] = 'Nicolas Morand';
 $plugin['author_uri'] = 'http://www.nicolasmorand.com';
 $plugin['description'] = 'PHP powered disclaimer with cookie setting';
@@ -80,12 +80,12 @@ If used as a single tag, @<txp:oui_disclaimer />@ should contains at least a @me
 * @alt="…"@ – _Default: unset_ - The alternative message to display when the disclaimer is accepted.
 
 * @accept_url="…"@ - _Default: unset (current page)_ - An url to redirect the user once the discliamer accepted.
-* @accept="…"@ - _Default: unset_ - The text value to assigned to the @accept@ link.
+* @accept="…"@ - _Default: unset_ - The value to assigned to the @accept@ link.
 
-* @decline="…"@ – _Default: unset_ - The text value to assigned to the @decline@ link if a @decline_url@ is provided.
+* @decline="…"@ – _Default: unset_ - The value to assigned to the @decline@ link if a @decline_url@ is provided.
 * @decline_url="…"@ – _Default: unset_ - An alternative url to the @accept@ link url. 
 
-* @reset="…"@ - _Default: unset_ - The text value to assigned to the @reset@ link.
+* @reset="…"@ - _Default: unset_ - The value to assigned to the @reset@ link.
 * @reset_url="…"@ - _Default: unset (current page)_ - An url to redirect the user once the cookie deleted.
 
 h3. <txp:oui_disclaimer_accept />
@@ -99,6 +99,8 @@ h4. Attributes
 * @wraptag="…"@ - _Default: unset_ - The HTML tag used around the generated link.
 * @class="…"@ – _Default: unset_ - The css class to apply to the HTML tag assigned to @wraptag@.
 
+* @value="…"@ * - _Default: unset_ - The value to assigned to the @accept@ link.
+
 h3. <txp:oui_disclaimer_reset />
 
 Displays a link to delete the cookie set by the accept link and shows the disclaimer again.
@@ -109,6 +111,8 @@ h4. Attributes
 
 * @wraptag="…"@ - _Default: unset_ - The HTML tag used around the generated link.
 * @class="…"@ – _Default: unset_ - The css class to apply to the HTML tag assigned to @wraptag@.
+
+* @value="…"@ * - _Default: unset_ - The value to assigned to the @areset@ link.
 
 h2(#exemples). Exemples
 
