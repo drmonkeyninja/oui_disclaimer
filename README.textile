@@ -24,7 +24,7 @@ Paste the content of the plugin file under the *Admin > Plugins*, upload it and 
 
 h2(#tags). Tags
 
-h3. txp:oui_disclaimer
+h3. <txp:oui_disclaimer />
 
 Displays a conditional warning message.
 Should be placed in your each page, or in a form, depending on how it is used.
@@ -36,7 +36,7 @@ h4. Attributes
 If used as a single tag, @<txp:oui_disclaimer />@ should contains at least a @message@ attribute. 
 
 * @cookie="…"@ - _Default: oui_disclaimer_accepted - Name of the cookie set to hide the disclaimer for a defined duration.
-* @expires="…"@ - _Default: +1 week_ - The duration assigned to the cookie ("strtotime":http://php.net/manual/fr/function.strtotime.php valid value). 
+* @expires="…"@ - _Default: +1 day_ - The duration assigned to the cookie ("strtotime":http://php.net/manual/fr/function.strtotime.php valid value). 
 
 * @wraptag="…"@ - _Default: p_ - The HTML tag used around the generated content.
 * @class="…"@ – _Default: oui_disclaimer_content_ - The css class to apply to the HTML tag assigned to @wraptag@. 
@@ -56,7 +56,7 @@ If used as a single tag, @<txp:oui_disclaimer />@ should contains at least a @me
 * @reset="…"@ - _Default: unset_ - The value to assigned to the @reset@ link.
 * @reset_url="…"@ - _Default: unset (current page)_ - An url to redirect the user once the cookie deleted.
 
-h3. txp:oui_disclaimer_accept
+h3. <txp:oui_disclaimer_accept />
 
 Displays a link to hide/replace the disclaimer message.
 
@@ -69,7 +69,7 @@ h4. Attributes
 
 * @value="…"@ * - _Default: unset_ - The value to assigned to the @accept@ link.
 
-h3. txp:oui_disclaimer_reset
+h3. <txp:oui_disclaimer_reset />
 
 Displays a link to delete the cookie set by the accept link and shows the disclaimer again.
 
@@ -117,13 +117,13 @@ Defined id:
 
 Defined classes:
 
-* @oui_diclaimer@ – Applied to a div wrapper with the @cookie@ id.
+* @oui_disclaimer@ – Applied to a div wrapper with the @cookie@ id.
 * @oui_disclaimer_label@ – Applied to the @labeltag@.
 * @oui_disclaimer_content@ – Applied to the @wraptag@ value by default; overrided by the @class@ attribute.
 * @oui_disclaimer_message@ – Applied to a span element.
-* @oui_disclaimer_accept@ – Applied to the link; overrided by the @class@ attribute of @<txp:oui_diclaimer_accept />@.
-* @oui_disclaimer_decline@ – Applied to the link when @<txp:oui_diclaimer />@ is used as a single tag.
-* @oui_disclaimer_reset@ – Applied to the link; overrided by the @class@ attribute of @<txp:oui_diclaimer_reset />@.
+* @oui_disclaimer_accept@ – Applied to the link; overrided by the @class@ attribute of @<txp:oui_disclaimer_accept />@.
+* @oui_disclaimer_decline@ – Applied to the link when @<txp:oui_disclaimer />@ is used as a single tag.
+* @oui_disclaimer_reset@ – Applied to the link; overrided by the @class@ attribute of @<txp:oui_disclaimer_reset />@.
 
 h2(#author). Author
 

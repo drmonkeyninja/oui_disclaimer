@@ -4,7 +4,7 @@ $plugin['name'] = 'oui_disclaimer';
 
 $plugin['allow_html_help'] = 0;
 
-$plugin['version'] = '1.4.2';
+$plugin['version'] = '1.4.3';
 $plugin['author'] = 'Nicolas Morand';
 $plugin['author_uri'] = 'http://www.nicolasmorand.com';
 $plugin['description'] = 'PHP powered disclaimer with cookie setting';
@@ -68,7 +68,7 @@ h4. Attributes
 If used as a single tag, @<txp:oui_disclaimer />@ should contains at least a @message@ attribute. 
 
 * @cookie="…"@ - _Default: oui_disclaimer_accepted - Name of the cookie set to hide the disclaimer for a defined duration.
-* @expires="…"@ - _Default: +1 week_ - The duration assigned to the cookie ("strtotime":http://php.net/manual/fr/function.strtotime.php valid value). 
+* @expires="…"@ - _Default: +1 day_ - The duration assigned to the cookie ("strtotime":http://php.net/manual/fr/function.strtotime.php valid value). 
 
 * @wraptag="…"@ - _Default: p_ - The HTML tag used around the generated content.
 * @class="…"@ – _Default: oui_disclaimer_content_ - The css class to apply to the HTML tag assigned to @wraptag@. 
@@ -149,13 +149,13 @@ Defined id:
 
 Defined classes:
 
-* @oui_diclaimer@ – Applied to a div wrapper with the @cookie@ id.
+* @oui_disclaimer@ – Applied to a div wrapper with the @cookie@ id.
 * @oui_disclaimer_label@ – Applied to the @labeltag@.
 * @oui_disclaimer_content@ – Applied to the @wraptag@ value by default; overrided by the @class@ attribute.
 * @oui_disclaimer_message@ – Applied to a span element.
-* @oui_disclaimer_accept@ – Applied to the link; overrided by the @class@ attribute of @<txp:oui_diclaimer_accept />@.
-* @oui_disclaimer_decline@ – Applied to the link when @<txp:oui_diclaimer />@ is used as a single tag.
-* @oui_disclaimer_reset@ – Applied to the link; overrided by the @class@ attribute of @<txp:oui_diclaimer_reset />@.
+* @oui_disclaimer_accept@ – Applied to the link; overrided by the @class@ attribute of @<txp:oui_disclaimer_accept />@.
+* @oui_disclaimer_decline@ – Applied to the link when @<txp:oui_disclaimer />@ is used as a single tag.
+* @oui_disclaimer_reset@ – Applied to the link; overrided by the @class@ attribute of @<txp:oui_disclaimer_reset />@.
 
 h2(#author). Author
 
@@ -171,7 +171,7 @@ This plugin is distributed under "GPLv2":http://www.gnu.org/licenses/gpl-2.0.fr.
 
 # --- BEGIN PLUGIN CODE ---
 function oui_disclaimer($atts, $thing=null) {
-	global $oui_disclaimer_urlvar, $oui_disclaimer_cookie, $oui_diclaimer_expires;
+	global $oui_disclaimer_urlvar, $oui_disclaimer_cookie, $oui_disclaimer_expires;
 
 	extract(lAtts(array(
 		'cookie'  => 'oui_disclaimer_hidden',
@@ -192,13 +192,13 @@ function oui_disclaimer($atts, $thing=null) {
 
 	$oui_disclaimer_urlvar = $cookie;
 	$oui_disclaimer_cookie = $cookie;
-	$oui_diclaimer_expires = $expires;
+	$oui_disclaimer_expires = $expires;
 
 	$visible = oui_disclaimer_visible();
 
-	$content = '<span class="oui_diclaimer_message">'.$message.'</span>'.($decline_url ? href($decline, $decline_url, ' class="oui_disclaimer_decline"') : '').href($accept, ($accept_url ? $accept_url : '').'?'.$oui_disclaimer_urlvar.'=1', ' class="oui_disclaimer_accept"');
+	$content = '<span class="oui_disclaimer_message">'.$message.'</span>'.($decline_url ? href($decline, $decline_url, ' class="oui_disclaimer_decline"') : '').href($accept, ($accept_url ? $accept_url : '').'?'.$oui_disclaimer_urlvar.'=1', ' class="oui_disclaimer_accept"');
 
-	$alt_content = ($alt ? '<span class="oui_diclaimer_message">'.$alt.'</span>' :'').($reset ? href($reset, ($reset_url ? $reset_url : '').'?oui_disclaimer_reset=1', ' class="oui_disclaimer_reset"') : '');
+	$alt_content = ($alt ? '<span class="oui_disclaimer_message">'.$alt.'</span>' :'').($reset ? href($reset, ($reset_url ? $reset_url : '').'?oui_disclaimer_reset=1', ' class="oui_disclaimer_reset"') : '');
 
 	if ($thing===null) 
 	{	
@@ -216,11 +216,11 @@ function oui_disclaimer($atts, $thing=null) {
 }
 
 function oui_disclaimer_visible() {
-	global $oui_disclaimer_urlvar, $oui_disclaimer_cookie, $oui_diclaimer_expires;
+	global $oui_disclaimer_urlvar, $oui_disclaimer_cookie, $oui_disclaimer_expires;
 	
 	if (gps($oui_disclaimer_urlvar))
 	{
-		setcookie($oui_disclaimer_cookie, 1, strtotime(''.$oui_diclaimer_expires.''), '/');
+		setcookie($oui_disclaimer_cookie, 1, strtotime(''.$oui_disclaimer_expires.''), '/');
 		$oui_disclaimer_visible = false;
 	}
 
