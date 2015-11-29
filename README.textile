@@ -2,7 +2,7 @@ h1. oui_disclaimer
 
 Easily display a warning message which can be hidden or replaced for a defined duration once accepted.
 
-!https://www.paypalobjects.com/en_GB/i/btn/btn_donate_LG.gif!:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PREHX3MZMXEUN
+!https://www.paypalobjects.com/en_GB/i/btn/btn_donate_SM.gif!:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PREHX3MZMXEUN
 
 h2. Table of contents
 
