@@ -2,8 +2,6 @@ h1. oui_disclaimer
 
 Easily display a warning message which can be hidden or replaced for a defined duration once accepted.
 
-!https://www.paypalobjects.com/en_GB/i/btn/btn_donate_SM.gif!:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PREHX3MZMXEUN
-
 h2. Table of contents
 
 * "Plugin requirements":#requirements
@@ -26,7 +24,7 @@ Paste the content of the plugin file under the *Admin > Plugins*, upload it and 
 
 h2(#tags). Tags
 
-h3. oui_disclaimer
+h3. <txp:oui_disclaimer />
 
 Displays a conditional warning message.
 Should be placed in your each page, or in a form, depending on how it is used.
@@ -50,15 +48,15 @@ If used as a single tag, @<txp:oui_disclaimer />@ should contains at least a @me
 * @alt="…"@ – _Default: unset_ - The alternative message to display when the disclaimer is accepted.
 
 * @accept_url="…"@ - _Default: unset (current page)_ - An url to redirect the user once the discliamer accepted.
-* @accept="…"@ - _Default: unset_ - The value to assigned to the @accept@ link.
+* @accept_text="…"@ - _Default: unset_ - The value to assigned to the @accept@ link.
 
-* @decline="…"@ – _Default: unset_ - The value to assigned to the @decline@ link if a @decline_url@ is provided.
 * @decline_url="…"@ – _Default: unset_ - An alternative url to the @accept@ link url. 
+* @decline_text="…"@ – _Default: unset_ - The value to assigned to the @decline@ link if a @decline_url@ is provided.
 
-* @reset="…"@ - _Default: unset_ - The value to assigned to the @reset@ link.
 * @reset_url="…"@ - _Default: unset (current page)_ - An url to redirect the user once the cookie deleted.
+* @reset_text="…"@ - _Default: unset_ - The value to assigned to the @reset@ link.
 
-h3. oui_disclaimer_accept
+h3. <txp:oui_disclaimer_accept />
 
 Displays a link to hide/replace the disclaimer message.
 
@@ -66,49 +64,49 @@ bc. <txp:oui_disclaimer_accept />
 
 h4. Attributes
 
-* @wraptag="…"@ - _Default: unset_ - The HTML tag used around the generated link.
 * @class="…"@ – _Default: unset_ - The css class to apply to the HTML tag assigned to @wraptag@.
 
-* @value="…"@ * - _Default: unset_ - The value to assigned to the @accept@ link.
+* @url="…"@ - _Default: unset (current page)_ - An url to redirect the user once the discliamer accepted.
+* @text="…"@ * - _Default: unset_ - The value to assigned to the @accept@ link.
 
-h3. oui_disclaimer_reset
+h3. <txp:oui_disclaimer_reset />
 
 Displays a link to delete the cookie set by the accept link and shows the disclaimer again.
 
-bc. <txp:oui_disclaimer_accept />
+bc. <txp:oui_disclaimer_reset />
 
 h4. Attributes
 
-* @wraptag="…"@ - _Default: unset_ - The HTML tag used around the generated link.
 * @class="…"@ – _Default: unset_ - The css class to apply to the HTML tag assigned to @wraptag@.
 
-* @value="…"@ * - _Default: unset_ - The value to assigned to the @areset@ link.
+* @url="…"@ - _Default: unset (current page)_ - An url to redirect the user once the cookie deleted.
+* @text="…"@ * - _Default: unset_ - The value to assigned to the @areset@ link.
 
 h2(#exemples). Exemples
 
 h3. Exemple 1: single tag use 
 
-bc. <txp:oui_disclaimer label="h3" labeltag="cookies-label" wraptag="p" class="cookies-warning" message="This website uses cookies" decline="Read more" decline_url="http://www.my-website.com/privacy-policy" accept="Accept and continue" />
+bc. <txp:oui_disclaimer label="h3" labeltag="cookies-label" wraptag="p" class="cookies-warning" message="This website uses cookies" decline_text="Read more" decline_url="http://www.my-website.com/privacy-policy" accept_text="Accept and continue" />
 
 Placed in your page(s), the code above will return the following HTML code if the _oui_disclaimer_accepted_ cookie is not already set or is expired.
 
 bc.. <div id="oui_disclaimer_accepted" class="oui_disclaimer">
-	<h3 class="cookies-label">Disclaimer</h3>
-	<p class="cookies-warning">
-		<span class="oui_disclaimer_message">This website uses cookies</span>
-		<a class="oui_disclaimer_decline" href="http://www.my-website.com/privacy-policy">Read more</a>
-		<a class="oui_disclaimer_accept" href="?oui_disclaimer_accepted=1">Accept and continue</a>
-	</p>
+    <h3 class="cookies-label">Disclaimer</h3>
+    <p class="cookies-warning">
+        <span class="oui_disclaimer_message">This website uses cookies</span>
+        <a class="oui_disclaimer_decline" href="http://www.my-website.com/privacy-policy">Read more</a>
+        <a class="oui_disclaimer_accept" href="?oui_disclaimer_accepted=1">Accept and continue</a>
+    </p>
 </div>
 
 h3. Exemple 2: container tag use 
 
 bc.. <txp:oui_disclaimer>
-	This content is crazy!
-	<txp:oui_disclaimer_accept value="I'm crazy!" />
+    This content is crazy!
+    <txp:oui_disclaimer_accept text="I'm crazy!" />
 <txp:else />
-	Well, you are crazy…
-	<txp:oui_disclaimer_reset value="I'm not that crazy!" />
+    Well, you are crazy…
+    <txp:oui_disclaimer_reset text="I'm not that crazy!" />
 </txp:oui_disclaimer>
 
 h2(#styles). Styles

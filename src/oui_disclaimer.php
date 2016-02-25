@@ -4,7 +4,7 @@ $plugin['name'] = 'oui_disclaimer';
 
 $plugin['allow_html_help'] = 0;
 
-$plugin['version'] = '1.4.3';
+$plugin['version'] = '1.4.4';
 $plugin['author'] = 'Nicolas Morand';
 $plugin['author_uri'] = 'http://www.nicolasmorand.com';
 $plugin['description'] = 'PHP powered disclaimer with cookie setting';
@@ -80,13 +80,13 @@ If used as a single tag, @<txp:oui_disclaimer />@ should contains at least a @me
 * @alt="…"@ – _Default: unset_ - The alternative message to display when the disclaimer is accepted.
 
 * @accept_url="…"@ - _Default: unset (current page)_ - An url to redirect the user once the discliamer accepted.
-* @accept="…"@ - _Default: unset_ - The value to assigned to the @accept@ link.
+* @accept_text="…"@ - _Default: unset_ - The value to assigned to the @accept@ link.
 
-* @decline="…"@ – _Default: unset_ - The value to assigned to the @decline@ link if a @decline_url@ is provided.
 * @decline_url="…"@ – _Default: unset_ - An alternative url to the @accept@ link url. 
+* @decline_text="…"@ – _Default: unset_ - The value to assigned to the @decline@ link if a @decline_url@ is provided.
 
-* @reset="…"@ - _Default: unset_ - The value to assigned to the @reset@ link.
 * @reset_url="…"@ - _Default: unset (current page)_ - An url to redirect the user once the cookie deleted.
+* @reset_text="…"@ - _Default: unset_ - The value to assigned to the @reset@ link.
 
 h3. <txp:oui_disclaimer_accept />
 
@@ -96,29 +96,29 @@ bc. <txp:oui_disclaimer_accept />
 
 h4. Attributes
 
-* @wraptag="…"@ - _Default: unset_ - The HTML tag used around the generated link.
 * @class="…"@ – _Default: unset_ - The css class to apply to the HTML tag assigned to @wraptag@.
 
-* @value="…"@ * - _Default: unset_ - The value to assigned to the @accept@ link.
+* @url="…"@ - _Default: unset (current page)_ - An url to redirect the user once the discliamer accepted.
+* @text="…"@ * - _Default: unset_ - The value to assigned to the @accept@ link.
 
 h3. <txp:oui_disclaimer_reset />
 
 Displays a link to delete the cookie set by the accept link and shows the disclaimer again.
 
-bc. <txp:oui_disclaimer_accept />
+bc. <txp:oui_disclaimer_reset />
 
 h4. Attributes
 
-* @wraptag="…"@ - _Default: unset_ - The HTML tag used around the generated link.
 * @class="…"@ – _Default: unset_ - The css class to apply to the HTML tag assigned to @wraptag@.
 
-* @value="…"@ * - _Default: unset_ - The value to assigned to the @areset@ link.
+* @url="…"@ - _Default: unset (current page)_ - An url to redirect the user once the cookie deleted.
+* @text="…"@ * - _Default: unset_ - The value to assigned to the @areset@ link.
 
 h2(#exemples). Exemples
 
 h3. Exemple 1: single tag use 
 
-bc. <txp:oui_disclaimer label="h3" labeltag="cookies-label" wraptag="p" class="cookies-warning" message="This website uses cookies" decline="Read more" decline_url="http://www.my-website.com/privacy-policy" accept="Accept and continue" />
+bc. <txp:oui_disclaimer label="h3" labeltag="cookies-label" wraptag="p" class="cookies-warning" message="This website uses cookies" decline_text="Read more" decline_url="http://www.my-website.com/privacy-policy" accept_text="Accept and continue" />
 
 Placed in your page(s), the code above will return the following HTML code if the _oui_disclaimer_accepted_ cookie is not already set or is expired.
 
@@ -135,10 +135,10 @@ h3. Exemple 2: container tag use
 
 bc.. <txp:oui_disclaimer>
     This content is crazy!
-    <txp:oui_disclaimer_accept value="I'm crazy!" />
+    <txp:oui_disclaimer_accept text="I'm crazy!" />
 <txp:else />
     Well, you are crazy…
-    <txp:oui_disclaimer_reset value="I'm not that crazy!" />
+    <txp:oui_disclaimer_reset text="I'm not that crazy!" />
 </txp:oui_disclaimer>
 
 h2(#styles). Styles
@@ -170,24 +170,32 @@ This plugin is distributed under "GPLv2":http://www.gnu.org/licenses/gpl-2.0.fr.
 }
 
 # --- BEGIN PLUGIN CODE ---
+if (class_exists('\Textpattern\Tag\Registry')) {
+    // Register Textpattern tags for TXP 4.6+.
+    Txp::get('\Textpattern\Tag\Registry')
+        ->register('oui_disclaimer')
+        ->register('oui_disclaimer_accept')
+        ->register('oui_disclaimer_reset');
+}
+
 function oui_disclaimer($atts, $thing=null) {
     global $oui_disclaimer_urlvar, $oui_disclaimer_cookie, $oui_disclaimer_expires;
 
     extract(lAtts(array(
-        'cookie'  => 'oui_disclaimer_hidden',
-        'expires'  => '+1 week',
-        'wraptag'  => 'p',
-        'class'  => 'oui_disclaimer_content',
-        'label'  => '',
-        'labeltag'  => '',
-        'message'  => '',
-        'alt'  => '',
+        'cookie'      => 'oui_disclaimer_hidden',
+        'expires'     => '+1 week',
+        'wraptag'     => 'p',
+        'class'       => 'oui_disclaimer_content',
+        'label'       => '',
+        'labeltag'    => '',
+        'message'     => '',
+        'alt'         => '',
         'accept_url'  => '',
-        'accept'  => '',
-        'decline_url'  => '',
-        'decline'  => '',
-        'reset_url' => '',
-        'reset' => '',
+        'accept_text' => '',
+        'decline_url' => '',
+        'decline_text'=> '',
+        'reset_url'   => '',
+        'reset_text'  => '',
     ),$atts));
 
     $oui_disclaimer_urlvar = $cookie;
@@ -196,16 +204,14 @@ function oui_disclaimer($atts, $thing=null) {
 
     $visible = oui_disclaimer_visible();
 
-    $content = '<span class="oui_disclaimer_message">'.$message.'</span>'.($decline_url ? href($decline, $decline_url, ' class="oui_disclaimer_decline"') : '').href($accept, ($accept_url ? $accept_url : '').'?'.$oui_disclaimer_urlvar.'=1', ' class="oui_disclaimer_accept"');
+    $content = '<span class="oui_disclaimer_message">'.$message.'</span>'.($decline_url ? href($decline_text, $decline_url, ' class="oui_disclaimer_decline"') : '').href($accept_text, ($accept_url ? $accept_url : '').'?'.$oui_disclaimer_urlvar.'=1', ' class="oui_disclaimer_accept"');
 
-    $alt_content = ($alt ? '<span class="oui_disclaimer_message">'.$alt.'</span>' :'').($reset ? href($reset, ($reset_url ? $reset_url : '').'?oui_disclaimer_reset=1', ' class="oui_disclaimer_reset"') : '');
+    $alt_content = ($alt ? '<span class="oui_disclaimer_message">'.$alt.'</span>' :'').($reset_text ? href($reset_text, ($reset_url ? $reset_url : '').'?oui_disclaimer_reset=1', ' class="oui_disclaimer_reset"') : '');
 
     if ($thing===null) {    
         $out = ($visible) ? '<div id="'.$cookie.'" class="oui_disclaimer">'.($label ? doLabel($label, $labeltag) : '').(($wraptag) ? doTag($content, $wraptag, $class) : $out).'</div>' : ($alt_content ? '<div id="'.$cookie.'" class="oui_disclaimer">'.($label ? doLabel($label, $labeltag) : '').(($wraptag) ? doTag($alt_content, $wraptag, $class) : $out).'</div>' : '');
         return $out;        
-    }
-
-    else {
+    } else {
         $result = ($visible) ? 1 : 0;
         $out = parse(EvalElse($thing, $result));
         return ($out ? '<div id="'.$cookie.'" class="oui_disclaimer">'.($label ? doLabel($label, $labeltag) : '').(($wraptag) ? doTag($out, $wraptag, $class) : $out).'</div>' : '');
@@ -226,13 +232,10 @@ function oui_disclaimer_visible() {
         if (gps('oui_disclaimer_reset')) {
             setcookie($oui_disclaimer_cookie, '', -1, '/');
             $oui_disclaimer_visible = true;
-        }
-        else {
+        } else {
             $oui_disclaimer_visible = false;
         }            
-    }
-
-    else {
+    } else {
         $oui_disclaimer_visible = true;
     }
     
@@ -246,16 +249,16 @@ function oui_disclaimer_accept($atts) {
     extract(lAtts(array(
         'url'  => '',
         'class'  => 'oui_disclaimer_accept',
-        'value'  => '',
+        'text'  => '',
     ),$atts));
 
-    if (!isset($atts['link'])) {
-        trigger_error("oui_disclaimer_accept requires a value attribute");
+    if (isset($atts['text'])) {
+    	$out =  href($text, ($url ? $url : '').'?'.$oui_disclaimer_urlvar.'=1', ' class="'.$class.'"');
+        return $out;
+    } else {
+        trigger_error("missing attribute; oui_disclaimer_accept requires a text attribute.");
         return;
     }
-
-    $out =  href($link, ($url ? $url : '').'?'.$oui_disclaimer_urlvar.'=1', ' class="'.$class.'"');
-    return $out;
 
 }
 
@@ -264,16 +267,16 @@ function oui_disclaimer_reset($atts) {
     extract(lAtts(array(
         'url'  => '',
         'class'  => 'oui_disclaimer_reset',
-        'value'  => '',
+        'text'  => '',
     ),$atts));
 
-    if (!isset($atts['link'])) {
-        trigger_error("oui_disclaimer_reset requires a value attribute");
+    if (isset($atts['text'])) {
+        $out =  href($text, ($url ? $url : '').'?oui_disclaimer_reset=1', ' class="'.$class.'"');
+        return $out;        
+    } else {
+        trigger_error("missing attribute: oui_disclaimer_reset requires a text attribute.");
         return;
     }
-
-    $out =  href($link, ($url ? $url : '').'?oui_disclaimer_reset=1', ' class="'.$class.'"');
-    return $out;
 
 }    
 # --- END PLUGIN CODE ---
