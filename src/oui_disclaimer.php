@@ -39,7 +39,7 @@ h2. Table of contents
 * "Plugin requirements":#requirements
 * "Installation":#installation
 * "Tags":#tags
-* "Exemples":#exemples
+* "Examples":#examples
 * "Styles":#styles
 * "Author":#author
 * "Licence":#licence
@@ -52,26 +52,26 @@ oui_disclaimer’s minimum requirements:
 
 h2(#installation). Installation
 
-Paste the content of the plugin file under the *Admin > Plugins*, upload it and install.
+Paste the content of the plugin file under *Admin > Plugins*, upload it and install.
 
 h2(#tags). Tags
 
 h3. <txp:oui_disclaimer />
 
 Displays a conditional warning message.
-Should be placed in your each page, or in a form, depending on how it is used.
+Should be placed in every page, or in a form, depending on how it is used.
 
 bc. <txp:oui_disclaimer />
 
 h4. Attributes
 
-If used as a single tag, @<txp:oui_disclaimer />@ should contains at least a @message@ attribute. 
+If used as a single tag, @<txp:oui_disclaimer />@ should contains at least a @message@ attribute.
 
 * @cookie="…"@ - _Default: oui_disclaimer_accepted - Name of the cookie set to hide the disclaimer for a defined duration.
-* @expires="…"@ - _Default: +1 day_ - The duration assigned to the cookie ("strtotime":http://php.net/manual/fr/function.strtotime.php valid value). 
+* @expires="…"@ - _Default: +1 day_ - The duration assigned to the cookie ("strtotime":http://php.net/manual/fr/function.strtotime.php valid value).
 
 * @wraptag="…"@ - _Default: p_ - The HTML tag used around the generated content.
-* @class="…"@ – _Default: oui_disclaimer_content_ - The css class to apply to the HTML tag assigned to @wraptag@. 
+* @class="…"@ – _Default: oui_disclaimer_content_ - The css class to apply to the HTML tag assigned to @wraptag@.
 
 * @label="…"@ – _Default: unset_ - The label used to entitled the generated content.
 * @labeltag="…"@ - _Default: unset_ - The HTML tag used around the value assigned to @label@.
@@ -82,7 +82,7 @@ If used as a single tag, @<txp:oui_disclaimer />@ should contains at least a @me
 * @accept_url="…"@ - _Default: unset (current page)_ - An url to redirect the user once the discliamer accepted.
 * @accept_text="…"@ - _Default: unset_ - The value to assigned to the @accept@ link.
 
-* @decline_url="…"@ – _Default: unset_ - An alternative url to the @accept@ link url. 
+* @decline_url="…"@ – _Default: unset_ - An alternative url to the @accept@ link url.
 * @decline_text="…"@ – _Default: unset_ - The value to assigned to the @decline@ link if a @decline_url@ is provided.
 
 * @reset_url="…"@ - _Default: unset (current page)_ - An url to redirect the user once the cookie deleted.
@@ -114,9 +114,9 @@ h4. Attributes
 * @url="…"@ - _Default: unset (current page)_ - An url to redirect the user once the cookie deleted.
 * @text="…"@ * - _Default: unset_ - The value to assigned to the @areset@ link.
 
-h2(#exemples). Exemples
+h2(#examples). Examples
 
-h3. Exemple 1: single tag use 
+h3. Example 1: single tag use
 
 bc. <txp:oui_disclaimer label="h3" labeltag="cookies-label" wraptag="p" class="cookies-warning" message="This website uses cookies" decline_text="Read more" decline_url="http://www.my-website.com/privacy-policy" accept_text="Accept and continue" />
 
@@ -131,7 +131,7 @@ bc.. <div id="oui_disclaimer_accepted" class="oui_disclaimer">
     </p>
 </div>
 
-h3. Exemple 2: container tag use 
+h3. Example 2: container tag use
 
 bc.. <txp:oui_disclaimer>
     This content is crazy!
@@ -208,9 +208,9 @@ function oui_disclaimer($atts, $thing=null) {
 
     $alt_content = ($alt ? '<span class="oui_disclaimer_message">'.$alt.'</span>' :'').($reset_text ? href($reset_text, ($reset_url ? $reset_url : '').'?oui_disclaimer_reset=1', ' class="oui_disclaimer_reset"') : '');
 
-    if ($thing===null) {    
+    if ($thing===null) {
         $out = ($visible) ? '<div id="'.$cookie.'" class="oui_disclaimer">'.($label ? doLabel($label, $labeltag) : '').(($wraptag) ? doTag($content, $wraptag, $class) : $out).'</div>' : ($alt_content ? '<div id="'.$cookie.'" class="oui_disclaimer">'.($label ? doLabel($label, $labeltag) : '').(($wraptag) ? doTag($alt_content, $wraptag, $class) : $out).'</div>' : '');
-        return $out;        
+        return $out;
     } else {
         $result = ($visible) ? 1 : 0;
         $out = parse(EvalElse($thing, $result));
@@ -221,7 +221,7 @@ function oui_disclaimer($atts, $thing=null) {
 
 function oui_disclaimer_visible() {
     global $oui_disclaimer_urlvar, $oui_disclaimer_cookie, $oui_disclaimer_expires;
-    
+
     if (gps($oui_disclaimer_urlvar)) {
         setcookie($oui_disclaimer_cookie, 1, strtotime(''.$oui_disclaimer_expires.''), '/');
         $oui_disclaimer_visible = false;
@@ -234,14 +234,14 @@ function oui_disclaimer_visible() {
             $oui_disclaimer_visible = true;
         } else {
             $oui_disclaimer_visible = false;
-        }            
+        }
     } else {
         $oui_disclaimer_visible = true;
     }
-    
+
     return $oui_disclaimer_visible;
 
-}    
+}
 
 function oui_disclaimer_accept($atts) {
     global $oui_disclaimer_urlvar;
@@ -272,13 +272,13 @@ function oui_disclaimer_reset($atts) {
 
     if (isset($atts['text'])) {
         $out =  href($text, ($url ? $url : '').'?oui_disclaimer_reset=1', ' class="'.$class.'"');
-        return $out;        
+        return $out;
     } else {
         trigger_error("missing attribute: oui_disclaimer_reset requires a text attribute.");
         return;
     }
 
-}    
+}
 # --- END PLUGIN CODE ---
 
 ?>
